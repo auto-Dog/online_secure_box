@@ -1,0 +1,74 @@
+<head>
+    <!-- 参考了https://blog.csdn.net/sinat_28371057/article/details/114608647 -->
+    <script src="./CryptoJS-master/rollups/aes.js"></script>
+    <script src="./CryptoJS-master/components/mode-ecb.js"></script>
+    <script src="./CryptoJS-master/components/pad-nopadding.js"></script>
+    
+
+<body>
+    <div style="		
+        position: absolute;
+		top:0;
+		left:40%;
+		box-sizing: border-box;
+		width: 100%;
+		max-width: 500px;
+		word-break: break-all;
+		padding:0 1rem;">
+        <h1>Online Secure Box #1</h1>
+    </div>
+    <div style="
+        position: absolute;
+        top:10%;
+		left:25%;
+        width:50%;
+        height:30%;
+        border:2px solid #20b2aa;
+		box-sizing: border-box;
+		max-height:12rem;
+		font-size: 1rem;
+		margin:0.5rem 0;
+		padding: 0.5rem;
+		overflow: auto;"> <span id="opt"></span> </div>
+
+</body>
+<script type="text/javascript">
+    const opt1=document.getElementById("opt")
+    function password() {
+        var testV = 1
+        var pass1 = prompt('请输入密码', '')
+        try {
+            //补全key
+            var count = pass1.length
+            var key = ""
+            if (count % 16 == 0){
+                key = pass1
+            }
+            else{
+                var add = 16 - (count%16)   // 计算需要补\0的数目
+                key = pass1 + '\0'.repeat(add)
+            }
+            console.log('补零个数:'+add)
+            console.log("密钥:" + key)
+            key = CryptoJS.enc.Utf8.parse(key)
+            
+            var encryptedBase64Str = "QnfG5+GEGTY/BVdm4n+OayDlMZzxCDTAffqTg5CI8GX087pDrq/JhXY1J8KO5NYP"     //在此处填写内容
+            var decryptedData = CryptoJS.AES.decrypt(encryptedBase64Str, key, {
+                mode: CryptoJS.mode.ECB,
+                padding: CryptoJS.pad.NoPadding
+            })
+
+            var decryptedStr = decryptedData.toString(CryptoJS.enc.Utf8)
+            console.log("解密后:" + decryptedStr) 
+            decryptedStr = decryptedStr.replace('\0','')
+            opt1.innerText=decryptedStr
+        }
+        catch (error) {
+            alert('密码错误!请刷新')
+        }
+
+    }
+    password()
+    // document.write(password());   
+</script>
+</head>
