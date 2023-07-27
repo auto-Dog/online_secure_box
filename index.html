@@ -1,0 +1,75 @@
+<head>
+    <!-- 参考了https://blog.csdn.net/sinat_28371057/article/details/114608647 -->
+    <script src="./CryptoJS-master/rollups/aes.js"></script>
+    <script src="./CryptoJS-master/components/mode-ecb.js"></script>
+    <script src="./CryptoJS-master/components/pad-nopadding.js"></script>
+    
+
+<body>
+    <div style="		
+        position: absolute;
+		top:0;
+		left:30%;
+		box-sizing: border-box;
+		width: 100%;
+		max-width: 500px;
+		word-break: break-all;
+		padding:0 1rem;">
+        <h1>Online Secure Box #1🛅</h1>
+    </div>
+    <div style="
+        position: absolute;
+        top:10%;
+		left:25%;
+        width:50%;
+        height:30%;
+        border:2px solid #20b2aa;
+		box-sizing: border-box;
+		max-height:12rem;
+		font-size: 1rem;
+		margin:0.5rem 0;
+		padding: 0.5rem;
+		overflow: auto;"> <span id="opt"></span> </div>
+
+</body>
+<script type="text/javascript">
+    const opt1=document.getElementById("opt")
+    function password() {
+        var testV = 1
+        var pass1 = prompt('请输入密码', '')
+        try {
+            //补全key
+            var count = pass1.length
+            var key = ""
+            if (count % 16 == 0){
+                key = pass1
+            }
+            else{
+                var add = 16 - (count%16)   // 计算需要补\0的数目
+                key = pass1 + '\0'.repeat(add)
+            }
+            console.log('补零个数:'+add)
+            //console.log("密钥:" + key)
+            key = CryptoJS.enc.Utf8.parse(key)
+            //在此处填写内容
+            var encryptedBase64Str = "E4+j1zrhcxVP9kxxPz6mGuJ8MqGCfdrGqAii53D4O88KTvr5YENN0pgr5e3QFctMulD7+1JeejJ18DAYSjnL4GuTcVDNJ19yfJwBQzdyK8FWE7w3JEBB7FZPD1Z70o2NQ8iOJZTBi7UggHzDDdr3N2y0CEH/2p56z4ug/D3v5rAqSQ/jtzGHbh9XAE1ax1BLp1wajsdoueJLdJknBq+g4zY5LBsWcMi6i1ASrL0jUcIG0OJYxQJH2/pPlIHB4mTZH83SuB0RcBh+faGzxZfwz4zQmtSY6AOJv8ayc9DA/rQ50siBkXSqvYRaUYetaOsWyBRGNLYq7CkeCjVgZaoAbhi+yGYt6rbP+Vrog+Kov5zWBkskOph+T3/7vw0vq5PoKh5TvGRpnOXsg9EGVsYosoMELSV7l/lLJoikF1lLNqGTlKzQ8pbIBxrKwlI+vrT5SZckHOV+70xNRDwJ7cUw4QH/HGeLDLDSVAOyvxK8wnHmPAMbIrODryMGUU87C9NImMKudha+hGR1KbM6Tb2sZryEj8vYSqUpJ1HgfjYRu3WoEpwbmEn19ByDBJ8gmlVE3I1rtjiEcXHVTmArgwIM1sSDMs9txoAfBq7cneZCwD2eCQguHES+otC0yR33WPE1"
+            var decryptedData = CryptoJS.AES.decrypt(encryptedBase64Str, key, {
+                mode: CryptoJS.mode.ECB,
+                padding: CryptoJS.pad.NoPadding
+            })
+
+            var decryptedStr = decryptedData.toString(CryptoJS.enc.Utf8)
+            console.log("解密后:" + decryptedStr) 
+            decryptedStr = decryptedStr.replace('\0','')
+			
+            opt1.innerText=decryptedStr
+        }
+        catch (error) {
+            alert('密码错误!请刷新')
+        }
+
+    }
+    password()
+    // document.write(password());   
+</script>
+</head>
